@@ -12,6 +12,7 @@ WordListTranslator
 * 3.修改代码中的app.config文件，设置各种参数（一看即懂，不再详述），包括连接字符串、表名、列名等
 * 4.（可选）代码中使用了Bing Translate API，你可能需要自己填写client id和app key。当然用我的也可以，不过我不保证能一直可用。
 
+#这里有一个更详细的配置方法：http://blog.sina.com.cn/s/blog_58c506600101vneu.html#
 
 ### 运行结果 ###
 最终结果会存放在Access数据库里，可以随便拿来处理。
