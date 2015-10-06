@@ -23,8 +23,9 @@ namespace WordListTranslator
 			//listener.Prefixes.Add("http://127.0.0.1:23333/");
 			//listener.Start();
 
-			//这里需要换成自己的client id和key
-			var auth = new AdmAuthentication("wordlisttranslator", "5j9oxYpwtzny93IGHzmZA3tdDbRw5zhu2bAv2jsBPdA=");
+			var clientId = ConfigurationManager.AppSettings["ClientId"];
+			var clientSecret = ConfigurationManager.AppSettings["ClientSecret"];
+			var auth = new AdmAuthentication(clientId, clientSecret);
 
 			//翻译
 			using (var connection = new OleDbConnection(ConfigurationManager.ConnectionStrings["Default"].ConnectionString))
@@ -57,8 +58,10 @@ namespace WordListTranslator
 				try
 				{
 					var token = auth.GetAccessToken();
+					var fromLang = ConfigurationManager.AppSettings["FromLanguage"];
+					var toLang = ConfigurationManager.AppSettings["ToLanguage"];
 					var result = client.Translate("Bearer " + token.access_token,
-						text, "en", "zh-CHS", "text/plain", "general");
+						text, fromLang, toLang, "text/plain", "general");
 					using (var command = connection.CreateCommand())
 					{
 						command.CommandText = string.Format(@"Update {0} Set {1}='{2}' Where ID={3}",
