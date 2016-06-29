@@ -60,8 +60,10 @@ namespace WordListTranslator
 					var token = auth.GetAccessToken();
 					var fromLang = ConfigurationManager.AppSettings["FromLanguage"];
 					var toLang = ConfigurationManager.AppSettings["ToLanguage"];
+					//How to: https://msdn.microsoft.com/en-us/library/ff512437.aspx
+					//maybe we can use TranslateArray here to get a better performance
 					var result = client.Translate("Bearer " + token.access_token,
-						text, fromLang, toLang, "text/plain", "general");
+						text, fromLang, toLang, "text/plain", "general", null);
 					using (var command = connection.CreateCommand())
 					{
 						command.CommandText = string.Format(@"Update {0} Set {1}='{2}' Where ID={3}",
@@ -90,7 +92,7 @@ namespace WordListTranslator
 			using (var connection = new OleDbConnection(ConfigurationManager.ConnectionStrings["Default"].ConnectionString))
 			{
 				connection.Open();
-				using (var command = new OleDbCommand(string.Format("Select {0},{1} From {2} Where {3} is NULL or {3}=''", cId, cFrom, tableName, cTo),
+				using (var command = new OleDbCommand(string.Format("Select [{0}],[{1}] From [{2}] Where [{3}] is NULL or [{3}]=''", cId, cFrom, tableName, cTo),
 							connection))
 				{
 					using (var reader = command.ExecuteReader())
